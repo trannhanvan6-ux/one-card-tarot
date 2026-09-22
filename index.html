@@ -1,0 +1,689 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ONE CARD — Tarot mỗi ngày</title>
+<meta name="description" content="Mỗi ngày một lá Tarot. Một lời nhắn nhỏ dành cho bạn.">
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Patrick+Hand&family=Space+Grotesk:wght@400;500;600;700&display=swap');
+
+:root{
+  --paper:#faf9f4;
+  --ink:#111;
+  --muted:#777;
+  --line:#1b1b1b;
+  --soft:#eceae2;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  margin:0;
+  background:var(--paper);
+  color:var(--ink);
+  font-family:"Space Grotesk",Arial,sans-serif;
+}
+button,a{font:inherit;color:inherit}
+button{cursor:pointer}
+a{text-decoration:none}
+::selection{background:#111;color:#fff}
+
+.page{max-width:1180px;margin:auto;padding:28px 42px 0}
+header{
+  display:flex;align-items:flex-start;justify-content:space-between;
+  gap:30px;
+}
+.brand{display:flex;gap:14px;align-items:flex-start}
+.star{font-size:28px;line-height:1;margin-top:3px}
+.brand h1{
+  margin:0;font-size:31px;letter-spacing:.06em;font-weight:600;
+}
+.brand p{
+  margin:5px 0 0;font-family:"Patrick Hand",cursive;font-size:19px;
+}
+nav{display:flex;gap:30px;padding-top:8px;align-items:center}
+nav a{
+  font-size:14px;font-weight:600;letter-spacing:.04em;
+  padding-bottom:6px;border-bottom:2px solid transparent;
+}
+nav a.active,nav a:hover{border-color:#111}
+.cat{
+  width:38px;height:38px;border:2px solid #111;border-radius:48% 52% 45% 55%;
+  display:grid;place-items:center;font-size:20px;transform:rotate(-3deg);
+}
+
+/* hero */
+.hero{
+  position:relative;text-align:center;padding:70px 10px 78px;
+  min-height:760px;display:flex;flex-direction:column;align-items:center;
+}
+.date{
+  font-family:"Patrick Hand",cursive;font-size:22px;margin-bottom:25px;
+}
+.card-wrap{position:relative;display:inline-block}
+.tarot-card{
+  width:255px;height:410px;background:#fff;border:3px solid #111;
+  border-radius:12px;padding:10px;box-shadow:8px 8px 0 #111;
+  transform:rotate(-1.2deg);transition:.35s ease;
+}
+.tarot-card:hover{transform:rotate(1deg) translateY(-5px)}
+.card-inner{
+  width:100%;height:100%;border:2px solid #111;border-radius:7px;
+  overflow:hidden;display:flex;flex-direction:column;
+}
+.card-art{
+  flex:1;position:relative;overflow:hidden;background:#fff;
+  display:flex;align-items:center;justify-content:center;
+}
+.card-art:before{
+  content:"";position:absolute;inset:14px;
+  border:2px dashed #111;border-radius:4px;transform:rotate(.8deg);
+}
+.sun{
+  width:115px;height:115px;border:4px solid #111;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;position:relative;
+  background:#fff;z-index:2;
+}
+.sun:before{
+  content:"☀";position:absolute;font-size:145px;z-index:-1;
+  font-family:Arial,sans-serif;line-height:1;
+}
+.face{font-size:34px;letter-spacing:4px}
+.sunglasses{
+  position:absolute;width:70px;height:20px;top:45px;left:22px;
+  border-top:5px solid #111;border-bottom:5px solid #111;
+  transform:rotate(-2deg);
+}
+.card-dog{
+  position:absolute;bottom:30px;font-size:48px;z-index:3;
+  filter:grayscale(1);
+}
+.card-title{
+  height:54px;border-top:2px solid #111;display:grid;place-items:center;
+  font-size:18px;font-weight:700;letter-spacing:.12em;
+}
+
+/* ===== 3D DAILY CARD ===== */
+.card-wrap{
+  perspective: 1400px;
+  display:inline-flex;
+  flex-direction:column;
+  align-items:center;
+}
+.tarot-card{
+  position:relative;
+  width:255px;
+  height:410px;
+  padding:0;
+  border:0;
+  background:transparent;
+  box-shadow:none;
+  transform-style:preserve-3d;
+  cursor:pointer;
+  appearance:none;
+  -webkit-appearance:none;
+}
+.tarot-card:focus-visible{
+  outline:3px solid #111;
+  outline-offset:8px;
+  border-radius:15px;
+}
+.card-inner{
+  position:relative;
+  width:100%;
+  height:100%;
+  border:0;
+  overflow:visible;
+  border-radius:12px;
+  transform-style:preserve-3d;
+  transition:
+    transform 850ms cubic-bezier(.2,.75,.2,1),
+    filter 300ms ease;
+  transform:rotateY(0deg) rotateZ(-1.2deg);
+}
+.tarot-card:hover .card-inner{
+  transform:rotateY(0deg) rotateZ(0deg) translateY(-4px);
+}
+.tarot-card.is-flipped .card-inner{
+  transform:rotateY(180deg) rotateZ(1deg);
+}
+.tarot-card.is-flipped:hover .card-inner{
+  transform:rotateY(180deg) rotateZ(0deg) translateY(-4px);
+}
+.card-face{
+  position:absolute;
+  inset:0;
+  background:#fff;
+  border:3px solid #111;
+  border-radius:12px;
+  padding:10px;
+  box-shadow:8px 8px 0 #111;
+  backface-visibility:hidden;
+  -webkit-backface-visibility:hidden;
+  transform-style:preserve-3d;
+}
+.card-front{
+  transform:rotateY(180deg);
+}
+.card-back{
+  transform:rotateY(0deg);
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  overflow:hidden;
+}
+.back-border{
+  position:absolute;
+  inset:13px;
+  border:2px solid #111;
+  border-radius:7px;
+}
+.back-border:before,
+.back-border:after{
+  content:"";
+  position:absolute;
+  inset:9px;
+  border:1px dashed #111;
+  border-radius:4px;
+}
+.back-symbol{
+  font-size:76px;
+  line-height:1;
+  transform:rotate(-7deg);
+  z-index:2;
+}
+.back-small{
+  margin-top:20px;
+  font-size:14px;
+  font-weight:700;
+  letter-spacing:.18em;
+  z-index:2;
+}
+.back-doodle{
+  margin-top:16px;
+  font-family:"Patrick Hand",cursive;
+  font-size:18px;
+  letter-spacing:.08em;
+  z-index:2;
+}
+.back-number{
+  position:absolute;
+  bottom:25px;
+  font-family:"Patrick Hand",cursive;
+  font-size:17px;
+}
+.flip-hint{
+  margin-top:17px;
+  font-family:"Patrick Hand",cursive;
+  font-size:19px;
+  transition:opacity .3s ease, transform .3s ease;
+}
+.tarot-card.is-flipped + .flip-hint{
+  opacity:0;
+  transform:translateY(-5px);
+  pointer-events:none;
+}
+
+/* subtle click feedback, not flashy */
+.tarot-card:active .card-inner{
+  transform:scale(.985) rotateY(0deg) rotateZ(-1.2deg);
+}
+.tarot-card.is-flipped:active .card-inner{
+  transform:scale(.985) rotateY(180deg) rotateZ(1deg);
+}
+
+/* Keep the front illustration compatible with the old styles. */
+.card-front .card-art{
+  height:calc(100% - 54px);
+  flex:none;
+}
+.card-front .card-title{
+  flex:none;
+}
+
+/* Slight 3D shadow change during the flip */
+.tarot-card.is-flipped .card-face{
+  box-shadow:7px 7px 0 #111;
+}
+
+@media(max-width:600px){
+  .tarot-card{width:220px;height:355px}
+  .back-symbol{font-size:64px}
+}
+
+.card-name{
+  font-size:42px;letter-spacing:.08em;margin-top:38px;font-weight:600;
+}
+.quote{
+  font-family:"Patrick Hand",cursive;font-size:26px;margin-top:12px;
+}
+.meaning{
+  max-width:570px;font-size:16px;line-height:1.7;margin:10px auto 24px;
+}
+.cta{
+  border:0;background:#111;color:#fff;border-radius:30px;
+  padding:14px 27px;font-weight:600;font-size:15px;
+  box-shadow:5px 5px 0 #c9c7bd;transition:.2s;
+}
+.cta:hover{transform:translate(2px,2px);box-shadow:3px 3px 0 #c9c7bd}
+
+.doodle{
+  position:absolute;font-family:"Patrick Hand",cursive;font-size:20px;
+  line-height:1.1;text-align:left;max-width:170px;
+}
+.doodle:after{content:"↘";display:block;font-family:Arial;font-size:27px}
+.note1{left:7%;top:225px;transform:rotate(-7deg)}
+.note2{right:4%;top:265px;transform:rotate(6deg)}
+.note3{left:8%;bottom:90px;transform:rotate(-4deg)}
+.note4{right:8%;bottom:80px;transform:rotate(4deg)}
+.rabbit{position:absolute;font-size:55px;bottom:60px;left:17%;transform:rotate(-8deg)}
+.cat-doodle{position:absolute;font-size:48px;bottom:45px;right:18%;transform:rotate(7deg)}
+.underline{height:2px;background:#111;width:70px;margin:2px auto 0}
+
+/* lower navigation */
+.lower{
+  border-top:1px solid #111;border-bottom:1px solid #111;
+  display:grid;grid-template-columns:repeat(3,1fr);
+}
+.lower-item{
+  padding:30px 28px;min-height:145px;border-right:1px solid #111;
+  transition:.2s;
+}
+.lower-item:last-child{border-right:0}
+.lower-item:hover{background:#f0eee6}
+.lower-icon{font-size:28px;margin-bottom:12px}
+.lower h3{margin:0 0 8px;font-size:18px;letter-spacing:.05em}
+.lower p{font-family:"Patrick Hand",cursive;font-size:18px;margin:0;line-height:1.3}
+.arrow{float:right;font-size:25px}
+
+/* sections */
+section.content{padding:90px 0}
+.section-title{text-align:center;margin-bottom:40px}
+.section-title h2{font-size:32px;letter-spacing:.06em;margin:0}
+.section-title p{font-family:"Patrick Hand",cursive;font-size:20px}
+.cards-grid{
+  display:grid;grid-template-columns:repeat(6,1fr);gap:13px;
+}
+.mini-card{
+  background:#fff;border:2px solid #111;border-radius:7px;padding:12px 8px;
+  min-height:175px;display:flex;flex-direction:column;justify-content:space-between;
+  transform:rotate(var(--r));transition:.2s;
+}
+.mini-card:hover{transform:rotate(0) translateY(-5px);box-shadow:4px 4px 0 #111}
+.mini-art{font-size:40px;text-align:center}
+.mini-number{font-size:11px;color:#777}
+.mini-name{font-weight:700;font-size:12px;line-height:1.15}
+.journal{
+  max-width:720px;margin:auto;border-top:2px solid #111;
+}
+.journal-row{
+  display:grid;grid-template-columns:130px 1fr 100px;gap:20px;
+  padding:18px 0;border-bottom:1px solid #aaa;align-items:center;
+}
+.journal-date{font-family:"Patrick Hand",cursive;font-size:20px}
+.journal-card{font-weight:600}
+.journal-tag{text-align:right;font-size:12px}
+.empty{font-family:"Patrick Hand",cursive;text-align:center;font-size:20px;padding:25px}
+
+footer{
+  display:flex;justify-content:space-between;align-items:center;
+  padding:18px 0 25px;font-size:12px;
+}
+footer .hand{font-family:"Patrick Hand",cursive;font-size:17px}
+
+/* modal */
+.modal{
+  position:fixed;inset:0;background:rgba(250,249,244,.94);z-index:20;
+  display:none;align-items:center;justify-content:center;padding:20px;
+}
+.modal.open{display:flex}
+.modal-box{
+  max-width:620px;width:100%;background:#fff;border:3px solid #111;
+  padding:38px;box-shadow:10px 10px 0 #111;position:relative;
+}
+.close{
+  position:absolute;right:15px;top:10px;background:none;border:0;
+  font-size:28px;
+}
+.modal-box h2{font-size:34px;margin:0 0 8px}
+.modal-box .keyword{font-family:"Patrick Hand";font-size:22px;margin-bottom:22px}
+.detail-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:15px;margin-top:25px}
+.detail{border-top:2px solid #111;padding-top:10px}
+.detail b{font-size:12px;text-transform:uppercase}
+.detail p{font-family:"Patrick Hand";font-size:18px;line-height:1.25}
+
+@media(max-width:900px){
+  .page{padding:22px 20px 0}
+  header{flex-wrap:wrap}
+  nav{order:3;width:100%;justify-content:center;gap:20px}
+  .hero{min-height:720px;padding-top:50px}
+  .doodle{display:none}.rabbit,.cat-doodle{display:none}
+  .cards-grid{grid-template-columns:repeat(3,1fr)}
+}
+@media(max-width:600px){
+  .brand h1{font-size:25px}.brand p{font-size:16px}
+  .cat{display:none}
+  .hero{padding-top:35px;min-height:680px}
+  .tarot-card{width:220px;height:355px}
+  .card-name{font-size:32px}
+  .meaning{font-size:15px;padding:0 8px}
+  .lower{grid-template-columns:1fr}
+  .lower-item{border-right:0;border-bottom:1px solid #111;min-height:115px}
+  .lower-item:last-child{border-bottom:0}
+  .cards-grid{grid-template-columns:repeat(2,1fr)}
+  .journal-row{grid-template-columns:80px 1fr;gap:10px}
+  .journal-tag{display:none}
+  .detail-grid{grid-template-columns:1fr}
+  .modal-box{padding:28px 20px}
+}
+</style>
+</head>
+<body>
+
+<div class="page">
+<header>
+  <a class="brand" href="#home">
+    <div class="star">✳</div>
+    <div>
+      <h1>ONE CARD</h1>
+      <p>Hôm nay vũ trụ đang nhắc bạn điều gì?</p>
+    </div>
+  </a>
+  <nav>
+    <a href="#home" class="active">HOME</a>
+    <a href="#the72">THE 72</a>
+    <a href="#journal">JOURNAL</a>
+    <div class="cat">⌁</div>
+  </nav>
+</header>
+
+<main id="home">
+<section class="hero">
+  <div class="date" id="todayDate"></div>
+
+  <div class="doodle note1">Chỉ là 1 lá<br>mỗi ngày.</div>
+  <div class="doodle note2">Không phải<br>lời tiên tri,<br>chỉ là một<br>lời nhắn nhỏ :)</div>
+  <div class="doodle note3">Có thể hôm nay<br>sẽ là một ngày<br>tuyệt vời. ♡</div>
+  <div class="doodle note4">Vẫn còn<br>72 lá nữa...</div>
+  <div class="rabbit">🐇</div>
+  <div class="cat-doodle">🐈</div>
+
+  <div class="card-wrap" id="dailyCardWrap" aria-label="Lá bài Tarot hôm nay">
+    <button class="tarot-card" id="dailyCard" type="button" aria-label="Nhấn để lật lá bài">
+      <div class="card-inner">
+        <div class="card-face card-back">
+          <div class="back-border"></div>
+          <div class="back-symbol">✳</div>
+          <div class="back-small">ONE CARD</div>
+          <div class="back-doodle">♡ · ✦ · ☼ · ♡</div>
+          <div class="back-number">72</div>
+        </div>
+
+        <div class="card-face card-front">
+          <div class="card-art">
+            <div class="sun"><span class="sunglasses"></span><span class="face">•ᴗ•</span></div>
+            <div class="card-dog">♟</div>
+          </div>
+          <div class="card-title" id="cardTitle">THE SUN</div>
+        </div>
+      </div>
+    </button>
+    <div class="flip-hint" id="flipHint">nhấn để mở ✦</div>
+  </div>
+
+  <div class="card-name" id="cardName">THE SUN</div>
+  <div class="underline"></div>
+  <div class="quote" id="cardQuote">“Hôm nay cứ vui đi.”</div>
+  <div class="meaning" id="cardMeaning">
+    Bạn không cần phải giải quyết mọi thứ. Có những ngày chỉ cần cho phép mình làm điều khiến mình thấy vui.
+  </div>
+  <button class="cta" id="readBtn">Đọc thông điệp hôm nay →</button>
+</section>
+
+<div class="lower">
+  <a class="lower-item" href="#the72">
+    <div class="lower-icon">☼</div>
+    <h3>THE 72 <span class="arrow">→</span></h3>
+    <p>Khám phá toàn bộ<br>bộ bài 72 lá.</p>
+  </a>
+  <a class="lower-item" href="#journal">
+    <div class="lower-icon">▢</div>
+    <h3>JOURNAL <span class="arrow">→</span></h3>
+    <p>Lưu lại hành trình<br>của bạn.</p>
+  </a>
+  <a class="lower-item" href="#about">
+    <div class="lower-icon">✳</div>
+    <h3>ABOUT <span class="arrow">→</span></h3>
+    <p>Vì sao chỉ 1 lá mỗi ngày?</p>
+  </a>
+</div>
+
+<section class="content" id="the72">
+  <div class="section-title">
+    <h2>THE 72</h2>
+    <p>72 lá. Không có lá nào “xấu” cả.</p>
+  </div>
+  <div class="cards-grid" id="cardsGrid"></div>
+</section>
+
+<section class="content" id="journal">
+  <div class="section-title">
+    <h2>JOURNAL</h2>
+    <p>Những lá bài đã ghé qua.</p>
+  </div>
+  <div class="journal" id="journalList"></div>
+</section>
+
+<section class="content" id="about">
+  <div class="section-title">
+    <h2>WHY ONE CARD?</h2>
+    <p>Không phải để đoán tương lai.<br>Chỉ để dừng lại một chút và nhìn vào hôm nay.</p>
+  </div>
+</section>
+</main>
+
+<footer>
+  <strong>ONE CARD</strong>
+  <span>72 cards · 1 day · infinite possibilities</span>
+  <span class="hand">See you tomorrow ♡</span>
+</footer>
+</div>
+
+<div class="modal" id="modal">
+  <div class="modal-box">
+    <button class="close" id="closeModal">×</button>
+    <h2 id="modalTitle"></h2>
+    <div class="keyword" id="modalKeyword"></div>
+    <p id="modalText"></p>
+    <div class="detail-grid">
+      <div class="detail"><b>Tình cảm</b><p id="modalLove"></p></div>
+      <div class="detail"><b>Công việc</b><p id="modalWork"></p></div>
+      <div class="detail"><b>Tâm trạng</b><p id="modalMood"></p></div>
+    </div>
+  </div>
+</div>
+
+<script>
+const cards = [
+["THE FOOL","Cứ đi đã.","Bạn chưa cần biết mọi thứ sẽ đi về đâu. Một bước nhỏ hôm nay cũng là bắt đầu.","Đừng cố đoán người khác nghĩ gì.","Thử một điều mới mà không cần hoàn hảo.","Tò mò."],
+["THE MAGICIAN","Bạn có đủ thứ mình cần.","Thứ bạn đang chờ có thể đã nằm trong tay bạn lâu rồi.","Nói điều bạn thật sự muốn nói.","Bắt tay vào việc thay vì chuẩn bị mãi.","Chủ động."],
+["THE HIGH PRIESTESS","Suỵt. Nghe trực giác.","Không phải câu hỏi nào cũng cần một câu trả lời ngay hôm nay.","Để ý điều bạn chưa nói ra.","Quan sát thêm trước khi quyết định.","Lắng nghe."],
+["THE EMPRESS","Cho mình được tận hưởng.","Một chút dịu dàng không làm bạn yếu đi.","Hãy chăm sóc một người bạn yêu quý.","Làm thứ gì đó đẹp hoặc dễ chịu.","Ấm áp."],
+["THE EMPEROR","Đặt lại mọi thứ vào chỗ.","Một ngày có cấu trúc đôi khi khiến đầu óc nhẹ hơn.","Nói rõ ranh giới của mình.","Ưu tiên việc quan trọng nhất.","Vững vàng."],
+["THE HIEROPHANT","Có thể hỏi người khác.","Bạn không cần tự mình phát minh lại cách giải quyết mọi chuyện.","Một lời khuyên chân thành đáng giá.","Học từ người đã đi trước.","Khiêm tốn."],
+["THE LOVERS","Chọn điều thật lòng.","Một lựa chọn tốt thường là lựa chọn bạn có thể sống thật với nó.","Nói thật nhưng nói tử tế.","Chọn việc phù hợp với giá trị của bạn.","Rõ ràng."],
+["THE CHARIOT","Đi tiếp.","Bạn không cần nhanh, chỉ cần đừng đứng yên vì sợ sai.","Chủ động tiến một bước.","Tập trung vào một mục tiêu.","Quyết tâm."],
+["STRENGTH","Mềm không có nghĩa là yếu.","Kiên nhẫn với chính mình hôm nay cũng là một dạng can đảm.","Đừng ép mọi thứ phải có câu trả lời.","Bền bỉ hơn là vội vàng.","Bình tĩnh."],
+["THE HERMIT","Tắt thông báo một chút.","Bạn có thể cần khoảng lặng để nghe được điều mình thật sự nghĩ.","Cho bản thân chút không gian.","Làm việc một mình cũng ổn.","Yên tĩnh."],
+["WHEEL OF FORTUNE","Hôm nay hơi bất ngờ.","Có thứ có thể thay đổi nhanh hơn bạn nghĩ. Cứ để ngày hôm nay mở ra.","Đừng cố kiểm soát từng chi tiết.","Một cơ hội nhỏ có thể xuất hiện.","Linh hoạt."],
+["JUSTICE","Nhìn cả hai phía.","Trước khi kết luận, hãy cho sự thật thêm một chút thời gian.","Nói chuyện công bằng.","Kiểm tra lại thông tin trước khi quyết.","Cân bằng."],
+["THE HANGED MAN","Đổi góc nhìn.","Nếu mọi thứ đang đứng yên, có lẽ bạn đang nhìn nó từ một phía quá lâu.","Đừng vội phản ứng.","Thử cách làm ngược lại thói quen.","Chậm lại."],
+["DEATH","Một chương đang hết.","Không phải mọi kết thúc đều là mất mát. Có thứ chỉ đơn giản đã hoàn thành.","Buông điều đã cũ.","Dọn chỗ cho một cách làm mới.","Chuyển tiếp."],
+["TEMPERANCE","Bớt một chút, thêm một chút.","Hôm nay không cần cực đoan. Một nhịp vừa phải có thể hiệu quả hơn.","Nói chuyện nhẹ nhàng.","Chia việc thành từng phần.","Điềm đạm."],
+["THE DEVIL","Bạn đang bị thứ gì kéo đi?","Có thể một thói quen đang lấy nhiều năng lượng hơn bạn nhận ra.","Đừng để lo lắng quyết định thay bạn.","Nhận diện một thứ đang làm bạn phân tâm.","Tỉnh táo."],
+["THE TOWER","Uh oh.","Có thứ không còn hoạt động như trước. Đừng cố dựng lại ngay khi bụi còn chưa lắng.","Đừng tranh luận khi cảm xúc quá cao.","Sửa một vấn đề thật sự, không chỉ triệu chứng.","Tháo gỡ."],
+["THE STAR","Vẫn còn hy vọng.","Bạn không cần thấy toàn bộ con đường. Chỉ cần thấy bước kế tiếp.","Cho phép mình tin vào điều tốt.","Tiếp tục một việc đang có ý nghĩa.","Nhẹ nhõm."],
+["THE MOON","Mọi thứ hơi mờ.","Đừng biến một nỗi lo thành sự thật chỉ vì nó nghe có vẻ hợp lý.","Đừng suy diễn tin nhắn.","Kiểm tra dữ kiện trước khi kết luận.","Nhạy cảm."],
+["THE SUN","Hôm nay cứ vui đi.","Bạn không cần phải giải quyết mọi thứ. Có những ngày chỉ cần cho phép mình làm điều khiến mình thấy vui.","Chia sẻ một niềm vui nhỏ.","Làm việc với năng lượng sáng nhất của bạn.","Rạng rỡ."],
+["JUDGEMENT","Đừng tự chấm điểm mình.","Nhìn lại để hiểu, không phải để trách bản thân.","Cho một cuộc trò chuyện cũ cơ hội mới.","Rút kinh nghiệm rồi bước tiếp.","Thức tỉnh."],
+["THE WORLD","Xong một vòng rồi.","Hãy nhìn lại xem bạn đã đi xa đến đâu trước khi vội chạy tiếp.","Trân trọng điều đã cùng nhau trải qua.","Đánh dấu một cột mốc.","Trọn vẹn."],
+["THE BEGINNING","Bắt đầu nhỏ thôi.","Một ý tưởng không cần hoàn hảo mới đáng để thử.","Gửi tin nhắn đó.","Mở file mới và viết dòng đầu tiên.","Háo hức."],
+["THE DOUBT","Hmm...","Không chắc chắn không đồng nghĩa với sai. Bạn có thể đi chậm hơn một chút.","Đừng đọc quá nhiều vào một dấu hiệu.","Hỏi lại khi chưa rõ.","Lưỡng lự."],
+["THE YES","Có.","Nếu điều này làm bạn thấy nhẹ người, có lẽ đáng để thử.","Nói rõ lời đồng ý.","Nhận lấy cơ hội phù hợp.","Mở lòng."],
+["THE NO","Không cũng được.","Một lời từ chối đúng lúc có thể giúp bạn giữ lại năng lượng cho điều quan trọng.","Đặt ranh giới.","Từ chối một việc không cần thiết.","Dứt khoát."],
+["THE MAYBE","Chưa cần quyết hôm nay.","Đôi khi thời gian là một phần của câu trả lời.","Cho cuộc trò chuyện thêm thời gian.","Thu thập thêm thông tin.","Chờ đợi."],
+["THE MESS","Hơi bừa một tí.","Không phải ngày nào cũng cần gọn gàng. Cứ làm một việc nhỏ trước.","Đừng cố giải quyết mọi cảm xúc cùng lúc.","Dọn một góc nhỏ rồi bắt đầu.","Thật thà."],
+["THE COFFEE","Cần nghỉ.","Bạn không phải cái máy. Nghỉ một chút không làm bạn chậm đi mãi.","Một cuộc trò chuyện nhẹ nhàng.","Làm một việc rồi nghỉ.","Dễ chịu."],
+["THE CAT","Làm theo cách của mình.","Không phải lúc nào cũng cần giải thích vì sao bạn cần không gian riêng.","Đừng cố gây ấn tượng.","Giữ nhịp làm việc phù hợp với mình.","Độc lập."],
+["THE DOG","Có người ở đây.","Bạn không phải làm mọi thứ một mình.","Nhắn cho người bạn tin.","Nhờ hỗ trợ khi cần.","Ấm lòng."],
+["THE MIRROR","Nhìn lại mình.","Điều làm bạn khó chịu ở người khác đôi khi đang nói điều gì đó về chính bạn.","Đừng phản ứng ngay.","Xem lại cách mình đang làm.","Tự nhận thức."],
+["THE WINDOW","Mở ra một chút.","Một góc nhìn mới có thể xuất hiện nếu bạn chịu bước ra khỏi căn phòng quen thuộc.","Gặp một người khác với thường ngày.","Tìm một nguồn cảm hứng mới.","Thoáng."],
+["THE DOOR","Có một lối khác.","Nếu cánh cửa này đóng, điều đó không có nghĩa là hành trình kết thúc.","Đừng ép một người mở lòng.","Thử phương án B.","Hy vọng."],
+["THE CLOUD","Hôm nay đầu hơi nhiều mây.","Bạn không cần phải hiểu hết cảm xúc của mình ngay.","Đừng nhắn khi đang quá rối.","Làm việc đơn giản trước.","Mơ màng."],
+["THE RAIN","Cứ để nó rơi.","Có những ngày buồn một chút cũng chẳng sao.","Cho phép mình mềm lòng.","Đừng ép năng suất khi cần nghỉ.","Thanh lọc."],
+["THE UMBRELLA","Bảo vệ năng lượng.","Không phải chuyện gì cũng cần bạn tham gia.","Giữ khoảng cách lành mạnh.","Tắt bớt thông báo.","An toàn."],
+["THE BRIDGE","Nối lại.","Một khoảng cách có thể được thu hẹp bằng một câu nói chân thành.","Chủ động làm hòa nếu phù hợp.","Hợp tác thay vì cạnh tranh.","Kết nối."],
+["THE LADDER","Từng bậc một.","Đừng nhìn cả cái cầu thang rồi tự thấy mệt.","Hãy để mối quan hệ tiến tự nhiên.","Chia mục tiêu lớn thành bước nhỏ.","Tiến bộ."],
+["THE BACKPACK","Bớt mang theo.","Bạn không cần đem chuyện cũ đi khắp nơi.","Buông một kỳ vọng cũ.","Xóa một việc không còn cần thiết.","Nhẹ hơn."],
+["THE CLOCK","Không cần vội.","Bạn đang so sánh mình với một chiếc đồng hồ không phải của mình.","Mỗi người có nhịp riêng.","Làm đúng việc trước khi làm nhanh.","Kiên nhẫn."],
+["THE COIN","Một lựa chọn nhỏ.","Một thay đổi rất nhỏ hôm nay có thể tạo khác biệt sau này.","Cho nhau một cơ hội nhỏ.","Thử nghiệm trước khi cam kết.","Thực tế."],
+["THE SEED","Chưa thấy quả thôi.","Điều bạn làm hôm nay có thể chưa cho kết quả ngay.","Chăm sóc điều đang lớn dần.","Tiếp tục gieo.","Tin tưởng."],
+["THE FLOWER","Nở theo cách riêng.","Không cần nở cùng lúc với người khác.","Đừng so sánh mối quan hệ.","Cho phép bản thân phát triển.","Tươi mới."],
+["THE BIRD","Nhẹ đi.","Có thể bạn đang suy nghĩ quá nhiều về một chuyện rất nhỏ.","Nói ra điều cần nói.","Giải phóng một việc tồn đọng.","Thoáng đầu."],
+["THE FISH","Đi theo dòng.","Không phải lúc nào chống lại dòng nước cũng là mạnh mẽ.","Đừng ép câu trả lời.","Điều chỉnh theo hoàn cảnh.","Linh hoạt."],
+["THE MOUNTAIN","Một chuyện lớn.","Đừng biến một ngọn núi thành lý do để không bước bước đầu tiên.","Kiên nhẫn với tiến trình của người khác.","Chọn một phần để xử lý.","Vững."],
+["THE SEA","Rộng hơn bạn nghĩ.","Một vấn đề hiện tại không phải toàn bộ cuộc đời bạn.","Đừng cố giữ mọi thứ.","Tạm lùi để nhìn toàn cảnh.","Khoáng đạt."],
+["THE COMPASS","Quay về hướng mình.","Khi có quá nhiều lựa chọn, hãy nhớ điều gì quan trọng với bạn.","Hỏi mình muốn gì.","Ưu tiên giá trị cốt lõi.","Định hướng."],
+["THE MAP","Bạn chưa cần biết hết.","Một kế hoạch tốt vẫn có thể thay đổi.","Cùng nhau thống nhất bước tiếp theo.","Viết kế hoạch đơn giản.","Rõ đường."],
+["THE LANTERN","Đủ sáng cho bước kế.","Bạn không cần ánh sáng cho cả con đường.","Một cuộc nói chuyện nhỏ có thể giúp rõ hơn.","Tìm dữ kiện còn thiếu.","Hy vọng."],
+["THE KEY","Có lời giải.","Thứ bạn cần có thể là một câu hỏi đúng hơn.","Hỏi thay vì đoán.","Tìm nguyên nhân gốc.","Tò mò."],
+["THE LOCK","Chưa phải lúc.","Một số chuyện cần thời gian hoặc sự đồng thuận của người khác.","Tôn trọng ranh giới.","Đừng ép tiến độ.","Bình tĩnh."],
+["THE MIRACLE","Ồ.","Có một điều nhỏ đáng để vui hôm nay.","Để ý những cử chỉ nhỏ.","Ghi nhận tiến bộ nhỏ.","Ngạc nhiên."],
+["THE JOKE","Đừng nghiêm túc quá.","Bạn được phép cười về một chuyện từng khiến mình căng thẳng.","Một chút hài hước sẽ giúp ích.","Đổi cách tiếp cận.","Vui."],
+["THE SNOOZE","Thêm 5 phút.","Bạn không cần phản hồi mọi thứ ngay lập tức.","Đừng quyết định khi đang mệt.","Ưu tiên nghỉ đủ.","Lười có chiến lược."],
+["THE PLANT","Tưới đúng chỗ.","Không phải điều gì cũng cần nhiều sự chú ý; điều quan trọng là đều đặn.","Quan tâm bằng hành động nhỏ.","Duy trì thói quen.","Ổn định."],
+["THE BUBBLE","Giữ khoảng riêng.","Một chút riêng tư có thể làm các mối quan hệ khỏe hơn.","Cho nhau không gian.","Tập trung mà không bị làm phiền.","Bình yên."],
+["THE WAVE","Đến rồi đi.","Cảm xúc cũng có thủy triều. Hôm nay cao, mai có thể thấp.","Đừng đưa ra kết luận lúc cảm xúc đang dâng.","Chờ qua cơn sóng.","Trôi."],
+["THE BUTTON","Bấm thử đi.","Bạn sẽ không biết nếu không thử.","Gửi lời mời.","Test ý tưởng trước khi hoàn thiện.","Tinh nghịch."],
+["THE PAPER","Viết ra.","Một suy nghĩ trên đầu sẽ nhẹ hơn khi nằm trên giấy.","Viết điều bạn chưa nói.","Ghi lại ưu tiên.","Sáng rõ."],
+["THE ERASER","Có thể sửa.","Một sai lầm không cần trở thành danh tính của bạn.","Xin lỗi nếu cần.","Sửa một phần thay vì bỏ tất cả.","Nhẹ nhõm."],
+["THE STAIR","Chậm nhưng lên.","Tiến bộ không phải lúc nào cũng nhìn thấy từ ngày này sang ngày khác.","Đừng so tốc độ.","Tiếp tục bước nhỏ.","Bền bỉ."],
+["THE EXIT","Đi ra ngoài.","Nếu một nơi không còn phù hợp, bạn có quyền tìm lối khác.","Rời khỏi cuộc trò chuyện độc hại.","Đổi môi trường làm việc một chút.","Giải phóng."],
+["THE PAUSE","Dừng lại.","Không làm gì trong vài phút cũng là một lựa chọn.","Nghe người kia thay vì chuẩn bị đáp lời.","Nghỉ trước khi xử lý việc tiếp.","Khoảng thở."],
+["THE THANK YOU","Nói cảm ơn.","Có thể hôm nay bạn nhận ra mình không đi một mình.","Cảm ơn một người cụ thể.","Ghi nhận người đã giúp bạn.","Biết ơn."],
+["THE SURPRISE","Ủa?","Ngày hôm nay có thể không diễn ra đúng kịch bản. Và điều đó không nhất thiết xấu.","Đừng vội phán xét.","Đón nhận thay đổi nhỏ.","Bất ngờ."],
+["THE HOME","Về nhà.","Tìm một nơi khiến bạn được là chính mình.","Một cuộc trò chuyện thân thuộc.","Hoàn thành việc rồi nghỉ.","An tâm."],
+["THE STORY","Bạn đang kể câu chuyện gì?","Cách bạn gọi tên một chuyện có thể thay đổi cách bạn nhìn nó.","Đừng tự viết kết luận thay người khác.","Đổi cách diễn đạt vấn đề.","Phản tỉnh."],
+["THE END","Hết hôm nay thôi.","Không phải mọi ngày đều cần một bài học lớn. Ngày mai lại là một ngày khác.","Tha cho mình một chuyện nhỏ.","Đóng việc đang dang dở rồi nghỉ.","Khép lại."]
+];
+
+// deterministic daily index: same card for everyone on the same date
+function dailyIndex(){
+  const now = new Date();
+  const key = `${now.getFullYear()}-${now.getMonth()+1}-${now.getDate()}`;
+  let hash = 0;
+  for(let i=0;i<key.length;i++) hash = ((hash<<5)-hash)+key.charCodeAt(i), hash|=0;
+  return Math.abs(hash) % cards.length;
+}
+
+const today = new Date();
+const idx = dailyIndex();
+const card = cards[idx];
+
+document.getElementById("todayDate").textContent =
+  today.toLocaleDateString("vi-VN",{weekday:"long",day:"numeric",month:"long",year:"numeric"});
+
+document.getElementById("cardTitle").textContent = card[0];
+document.getElementById("cardName").textContent = card[0];
+document.getElementById("cardQuote").textContent = `“${card[1]}”`;
+document.getElementById("cardMeaning").textContent = card[2];
+
+
+const dailyCard = document.getElementById("dailyCard");
+const flipHint = document.getElementById("flipHint");
+
+dailyCard.addEventListener("click", () => {
+  const alreadyFlipped = dailyCard.classList.contains("is-flipped");
+
+  // One deliberate, smooth 3D flip.
+  dailyCard.classList.toggle("is-flipped");
+
+  if (!alreadyFlipped) {
+    flipHint.textContent = "đã mở hôm nay ♡";
+
+    // Let the physical card reveal itself before opening the reading.
+    setTimeout(() => {
+      document.getElementById("cardName").scrollIntoView({
+        behavior: "smooth",
+        block: "center"
+      });
+    }, 700);
+  }
+});
+
+document.getElementById("readBtn").addEventListener("click",()=>{
+  if(!dailyCard.classList.contains("is-flipped")){
+    dailyCard.classList.add("is-flipped");
+    flipHint.textContent = "đã mở hôm nay ♡";
+  }
+  document.getElementById("modalTitle").textContent = card[0];
+  document.getElementById("modalKeyword").textContent = `“${card[1]}”`;
+  document.getElementById("modalText").textContent = card[2];
+  document.getElementById("modalLove").textContent = card[3];
+  document.getElementById("modalWork").textContent = card[4];
+  document.getElementById("modalMood").textContent = card[5];
+  document.getElementById("modal").classList.add("open");
+});
+document.getElementById("closeModal").onclick=()=>document.getElementById("modal").classList.remove("open");
+document.getElementById("modal").addEventListener("click",e=>{
+  if(e.target.id==="modal") e.currentTarget.classList.remove("open");
+});
+
+// 72-card catalogue
+const grid=document.getElementById("cardsGrid");
+cards.forEach((c,i)=>{
+  const el=document.createElement("a");
+  el.href="#home";
+  el.className="mini-card";
+  el.style.setProperty("--r",`${[-1.5,.8,-.5,1.2,-.8,.4][i%6]}deg`);
+  el.innerHTML=`<div class="mini-art">${["☼","✦","☾","♡","☁","✳"][i%6]}</div>
+    <div><div class="mini-number">${String(i+1).padStart(2,"0")}</div><div class="mini-name">${c[0]}</div></div>`;
+  el.onclick=(e)=>{
+    e.preventDefault();
+    document.getElementById("modalTitle").textContent=c[0];
+    document.getElementById("modalKeyword").textContent=`“${c[1]}”`;
+    document.getElementById("modalText").textContent=c[2];
+    document.getElementById("modalLove").textContent=c[3];
+    document.getElementById("modalWork").textContent=c[4];
+    document.getElementById("modalMood").textContent=c[5];
+    document.getElementById("modal").classList.add("open");
+  };
+  grid.appendChild(el);
+});
+
+// Local journal: remembers today's card and prior visits
+const journalKey="one-card-journal-v1";
+let journal=JSON.parse(localStorage.getItem(journalKey)||"[]");
+const dateKey=today.toISOString().slice(0,10);
+if(!journal.some(x=>x.date===dateKey)){
+  journal.unshift({date:dateKey,name:card[0]});
+  journal=journal.slice(0,30);
+  localStorage.setItem(journalKey,JSON.stringify(journal));
+}
+const journalList=document.getElementById("journalList");
+if(!journal.length){
+  journalList.innerHTML='<div class="empty">Chưa có lá nào ghé qua.</div>';
+}else{
+  journalList.innerHTML=journal.map(x=>{
+    const d=new Date(x.date+"T12:00:00");
+    return `<div class="journal-row">
+      <div class="journal-date">${d.toLocaleDateString("vi-VN",{day:"2-digit",month:"2-digit",year:"numeric"})}</div>
+      <div class="journal-card">${x.name}</div>
+      <div class="journal-tag">ONE CARD</div>
+    </div>`;
+  }).join("");
+}
+</script>
+</body>
+</html>
